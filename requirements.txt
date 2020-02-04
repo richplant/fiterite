@@ -1,0 +1,9 @@
+asgiref==3.2.3
+Django==3.0.3
+django-etc==1.2.0
+django-sitegate==1.1.0
+django-siteprefs==1.1.0
+django-tables2==2.2.1
+Pillow==7.0.0
+pytz==2019.3
+sqlparse==0.3.0

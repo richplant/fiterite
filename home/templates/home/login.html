@@ -1,0 +1,30 @@
+{% extends 'home/base.html' %}
+{% load sitegate %}
+{% load static %}
+
+{% block content %}
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+            text-align: center!important;
+        }
+    </style>
+
+    <div class="my_signin_block login-block">
+        <img class="mb-4" src="{% static 'img/bootstrap-solid.svg' %}" alt="" width="72" height="72">
+        {% sitegate_signin_form %}
+    </div>
+    <div class="my_signup_block login-block">
+        <img class="mb-4" src="{% static 'img/bootstrap-solid.svg' %}" alt="" width="72" height="72">
+        {% sitegate_signup_form %}
+    </div>
+{% endblock content %}

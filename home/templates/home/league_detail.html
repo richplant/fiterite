@@ -1,0 +1,16 @@
+{% extends 'home/base.html' %}
+{% load render_table from django_tables2 %}
+{% block content %}
+<div class="container">
+    <h1>League</h1>
+    {% if league %}
+        <h2>{{ league.title }}</h2>
+        <h4>Owned by: {{ league.owner.username }}</h4>
+        <p class="lead">{{ league.description }}</p>
+    {% endif %}
+    {% if table %}
+        <h2>Battles</h2>
+        {% render_table table %}
+    {% endif %}
+</div>
+{% endblock content %}
