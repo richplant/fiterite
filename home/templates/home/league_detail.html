@@ -2,15 +2,33 @@
 {% load render_table from django_tables2 %}
 {% block content %}
 <div class="container">
-    <h1>League</h1>
     {% if league %}
-        <h2>{{ league.title }}</h2>
-        <h4>Owned by: {{ league.owner.username }}</h4>
-        <p class="lead">{{ league.description }}</p>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <img src="{{ league.image.url }}" class="img-thumbnail">
+        </div>
+        <div class="col-md-8">
+            <h1 class="display-2">{{ league.title }}</h1>
+            <h3>Owned by: {{ league.owner.username }}</h3>
+            <p class="lead">{{ league.description }}</p>
+        </div>
+    </div>
     {% endif %}
-    {% if table %}
-        <h2>Battles</h2>
-        {% render_table table %}
+    {% if standing_table %}
+        <div class="row mb-4">
+            <div class="col-md-10 mx-auto">
+                <h2>Player Standings</h2>
+                {% render_table standing_table %}
+            </div>
+        </div>
+    {% endif %}
+    {% if battle_table %}
+        <div class="row mb-4">
+            <div class="col-md-10 mx-auto">
+                <h2>Latest Battles</h2>
+                {% render_table battle_table %}
+            </div>
+        </div>
     {% endif %}
 </div>
 {% endblock content %}

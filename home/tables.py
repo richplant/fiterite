@@ -16,3 +16,13 @@ class BattleTable(tables.Table):
                   "army2.user.username",
                   "army2_pts",
                   )
+
+
+class StandingTable(tables.Table):
+    name = tables.Column()
+    title = tables.Column()
+    allegiance = tables.Column()
+    points = tables.Column()
+
+    class Meta:
+        template_name = "django_tables2/bootstrap4.html"

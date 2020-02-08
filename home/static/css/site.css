@@ -1,3 +1,9 @@
+html, body {
+    height: 100%;
+}
+body {
+    background-color: #f5f5f5 !important;
+}
 /* Login page */
 .login-block {
     width: 100%;

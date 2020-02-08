@@ -1,17 +1,51 @@
 {% extends 'home/base.html' %}
 {% block content %}
 <div class="container">
-    <h2>Leagues</h2>
-    {% if league_list %}
-        <ul>
-            {% for league in league_list %}
-            <li>
-                <a href="{% url 'detail' league.id  %}">{{ league.title }}</a>
-            </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        {{ league_list }}
-    {% endif %}
+    <div class="row mb-4">
+        <div class="col-md-4 text-center">
+            <h2 class="mb-4">Owned Leagues</h2>
+            <a href="{% url 'league-create' %}"><button type="button" class="btn btn-primary">Create New League</button></a>
+        </div>
+        <div class="col-md-8">
+            <div class="card-deck">
+                {% for league in owned_list %}
+                <div class="card">
+                    <a href="{% url 'league-detail' league.id  %}"><img src="{{ league.image.url }}" class="card-img-top"></a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ league.title }}</h5>
+                        <p class="card-text">{{ league.description }}</p>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Owned by: {{ league.owner.username }}</li>
+                            <li class="list-group-item">Current points: {{ league.current_points }}</li>
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <h2 class="mb-4">Playing in Leagues</h2>
+            <button type="button" class="btn btn-primary">Join a League</button>
+        </div>
+        <div class="col-md-8">
+            <div class="card-deck">
+                {% for league in playing_list %}
+                <div class="card">
+                    <a href="{% url 'league-detail' league.id  %}"><img src="{{ league.image.url }}" class="card-img-top"></a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ league.title }}</h5>
+                        <p class="card-text">{{ league.description }}</p>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Owned by: {{ league.owner.username }}</li>
+                            <li class="list-group-item">Current points: {{ league.current_points }}</li>
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}

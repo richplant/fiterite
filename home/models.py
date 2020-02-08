@@ -1,17 +1,49 @@
+from django.urls import reverse
 from django.utils import timezone
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class League(models.Model):
     title = models.CharField(max_length=128, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
-    image = models.ImageField()
+    image = models.ImageField(upload_to='league', blank=False, null=False)
     password = models.CharField(max_length=20, blank=False, null=False)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    current_points = models.PositiveIntegerField(blank=False, null=False, default=500)
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('league-detail', args=[str(self.id)])
+
+
+class Allegiance(models.TextChoices):
+    BOC = "BOC", _("Beasts of Chaos")
+    KRN = "KRN", _("Khorne")
+    NUR = "NUR", _("Nurgle")
+    SKN = "SKN", _("Skaven")
+    SLA = "SLA", _("Slaanesh")
+    TZN = "TZN", _("Tzeentch")
+    STD = "STD", _("Slaves to Darkness")
+    LON = "LON", _("Legions of Nagash")
+    NGT = "NGT", _("Nighthaunt")
+    OBR = "OBR", _("Ossiarch Bonereapers")
+    FEC = "FEC", _("Flesh Eater Courts")
+    BCR = "BCR", _("Beastclaw Raiders")
+    GSG = "GSG", _("Gloomspite Gitz")
+    OGR = "OGR", _("Ogor Mawtribes")
+    ORK = "ORK", _("Orruk Warclans")
+    COS = "COS", _("Cities of Sigmar")
+    DOK = "DOK", _("Daughters of Khaine")
+    FYR = "FYR", _("Fyreslayers")
+    IDK = "IDK", _("Idoneth Deepkin")
+    KRO = "KRO", _("Kharadron Overlords")
+    SER = "SER", _("Seraphon")
+    SCE = "SCE", _("Stormcast Eternals")
+    SYL = "SYL", _("Sylvaneth")
 
 
 class Army(models.Model):
@@ -20,65 +52,21 @@ class Army(models.Model):
     image = models.ImageField()
     league = models.ForeignKey(League, on_delete=models.CASCADE)
 
-    BOC = "BOC"
-    KRN = "KRN"
-    NUR = "NUR"
-    SKN = "SKN"
-    SLA = "SLA"
-    TZN = "TZN"
-    STD = "STD"
-    LON = "LON"
-    NGT = "NGT"
-    OBR = "OBR"
-    FEC = "FEC"
-    BCR = "BCR"
-    GSG = "GSG"
-    OGR = "OGR"
-    ORK = "ORK"
-    COS = "COS"
-    DOK = "DOK"
-    FYR = "FYR"
-    IDK = "IDK"
-    KRO = "KRO"
-    SER = "SER"
-    SCE = "SCE"
-    SYL = "SYL"
-
-    ALLEGIANCE_CHOICES = (
-        (BOC, "Beasts of Chaos"),
-        (KRN, "Khorne"),
-        (NUR, "Nurgle"),
-        (SKN, "Skaven"),
-        (SLA, "Slaanesh"),
-        (TZN, "Tzeentch"),
-        (STD, "Slaves to Darkness"),
-        (LON, "Legions of Nagash"),
-        (NGT, "Nighthaunt"),
-        (OBR, "Ossiarch Bonereapers"),
-        (FEC, "Flesh Eater Courts"),
-        (BCR, "Beastclaw Raiders"),
-        (GSG, "Gloomspite Gitz"),
-        (OGR, "Ogor Mawtribes"),
-        (ORK, "Orruk Warclans"),
-        (COS, "Cities of Sigmar"),
-        (DOK, "Daughters of Khaine"),
-        (FYR, "Fyreslayers"),
-        (IDK, "Idoneth Deepkin"),
-        (KRO, "Kharadron Overlords"),
-        (SER, "Seraphon"),
-        (SCE, "Stormcast Eternals"),
-        (SYL, "Sylvaneth"),
-    )
-
     allegiance = models.CharField(
         max_length=3,
-        choices=ALLEGIANCE_CHOICES,
-        default=BOC,
+        choices=Allegiance.choices,
+        default=Allegiance.BOC,
         verbose_name="Allegiance"
     )
 
     def __str__(self):
         return self.title
+
+    def get_points_for(self):
+        battles = Battle.objects.filter(league_id=self.league)
+        pts1 = [battle.army1_pts for battle in battles if battle.army1 == self]
+        pts2 = [battle.army2_pts for battle in battles if battle.army2 == self]
+        return sum(pts1) + sum(pts2)
 
 
 class Battle(models.Model):
