@@ -1,5 +1,4 @@
-{% extends 'home/base.html' %}
-{% block content %}
+{% extends 'home/base.html' %}{% block content %}
 <div class="container">
     <div class="row mb-4">
         <div class="col-md-4 text-center">
@@ -14,10 +13,16 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ league.title }}</h5>
                         <p class="card-text">{{ league.description }}</p>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Owned by: {{ league.owner.username }}</li>
-                            <li class="list-group-item">Current points: {{ league.current_points }}</li>
-                        </ul>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Owned by: {{ league.owner.username }}</li>
+                        <li class="list-group-item">Current points: {{ league.current_points }}</li>
+                    </ul>
+                    <div class="card-body text-center">
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'league-update' league.id %}" class="btn btn-primary">Edit</a>
+                            <a href="{% url 'league-delete' league.id %}" class="btn btn-danger">Delete</a>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
@@ -27,7 +32,7 @@
     <div class="row">
         <div class="col-md-4 text-center">
             <h2 class="mb-4">Playing in Leagues</h2>
-            <button type="button" class="btn btn-primary">Join a League</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#joinLeagueModal">Join a League</button>
         </div>
         <div class="col-md-8">
             <div class="card-deck">
@@ -37,10 +42,16 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ league.title }}</h5>
                         <p class="card-text">{{ league.description }}</p>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Owned by: {{ league.owner.username }}</li>
-                            <li class="list-group-item">Current points: {{ league.current_points }}</li>
-                        </ul>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Owned by: {{ league.owner.username }}</li>
+                        <li class="list-group-item">Current points: {{ league.current_points }}</li>
+                    </ul>
+                    <div class="card-body text-center">
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'league-detail' league.id %}" class="btn btn-primary">View</a>
+                            <a href="{% url 'league-leave' league.id %}" class="btn btn-danger">Leave</a>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
@@ -48,4 +59,38 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="joinLeagueModal" tabindex="-1" role="dialog" aria-labelledby="joinLeagueModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Join a new League</h5>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">League token</span>
+                    </div>
+                    <input id="token-text" type="text" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="join-league-btn" type="button" class="btn btn-primary">Join</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#join-league-btn').click(function(e) {
+           e.preventDefault();
+           let token = $('#token-text').val()
+           if (token !== "") {
+               window.location.replace("/join/" + token)
+           }
+        });
+    });
+</script>
 {% endblock content %}

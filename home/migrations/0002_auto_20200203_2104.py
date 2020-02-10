@@ -17,11 +17,6 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='home.League'),
         ),
         migrations.AlterField(
-            model_name='army',
-            name='allegiance',
-            field=models.CharField(choices=[('BOC', 'Beasts of Chaos'), ('KRN', 'Khorne'), ('NUR', 'Nurgle'), ('SKN', 'Skaven'), ('SLA', 'Slaanesh'), ('TZN', 'Tzeentch'), ('STD', 'Slaves to Darkness'), ('LON', 'Legions of Nagash'), ('NGT', 'Nighthaunt'), ('OBR', 'Ossiarch Bonereapers'), ('FEC', 'Flesh Eater Courts'), ('BCR', 'Beastclaw Raiders'), ('GSG', 'Gloomspite Gitz'), ('OGR', 'Ogor Mawtribes'), ('ORK', 'Orruk Warclans'), ('COS', 'Cities of Sigmar'), ('DOK', 'Daughters of Khaine'), ('FYR', 'Fyreslayers'), ('IDK', 'Idoneth Deepkin'), ('KRO', 'Kharadron Overlords'), ('SER', 'Seraphon'), ('SCE', 'Stormcast Eternals'), ('SYL', 'Sylvaneth')], default='BOC', max_length=3),
-        ),
-        migrations.AlterField(
             model_name='battle',
             name='army1',
             field=models.ForeignKey(limit_choices_to=models.Q(league=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='home.League')), on_delete=django.db.models.deletion.CASCADE, related_name='your_army', to='home.Army'),

@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from django.urls import reverse
 from django.utils import timezone
 from django.conf import settings
@@ -9,7 +11,7 @@ class League(models.Model):
     title = models.CharField(max_length=128, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
     image = models.ImageField(upload_to='league', blank=False, null=False)
-    password = models.CharField(max_length=20, blank=False, null=False)
+    password = models.UUIDField(blank=False, null=False, default=uuid4, editable=False)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     current_points = models.PositiveIntegerField(blank=False, null=False, default=500)
 
@@ -49,8 +51,9 @@ class Allegiance(models.TextChoices):
 class Army(models.Model):
     title = models.CharField(max_length=128)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    image = models.ImageField()
+    image = models.ImageField(upload_to='army', blank=False, null=False)
     league = models.ForeignKey(League, on_delete=models.CASCADE)
+    active = models.BooleanField(default=True, blank=False, null=False)
 
     allegiance = models.CharField(
         max_length=3,
@@ -68,6 +71,9 @@ class Army(models.Model):
         pts2 = [battle.army2_pts for battle in battles if battle.army2 == self]
         return sum(pts1) + sum(pts2)
 
+    def get_absolute_url(self):
+        return reverse('league-detail', args=[str(self.league.id)])
+
 
 class Battle(models.Model):
     date = models.DateField(blank=False, null=False, default=timezone.now, verbose_name="Date")
@@ -75,16 +81,16 @@ class Battle(models.Model):
     army1 = models.ForeignKey(
         Army,
         related_name="your_army",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=False,
-        null=False
+        null=True
     )
     army2 = models.ForeignKey(
         Army,
         related_name="other_player_army",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=False,
-        null=False
+        null=True
     )
     army1_pts = models.PositiveIntegerField(blank=False, null=False, verbose_name="Points")
     army2_pts = models.PositiveIntegerField(blank=False, null=False, verbose_name="Points")

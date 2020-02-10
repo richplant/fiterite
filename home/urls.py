@@ -5,9 +5,12 @@ from . import views
 urlpatterns = [
     path('', views.index, name='league-index'),
     path('login', views.login, name='login'),
+    path('logout', views.log_out, name='logout'),
     path('create', views.LeagueCreate.as_view(), name='league-create'),
-    path('update', views.LeagueUpdate.as_view(), name='league-update'),
-    path('delete', views.LeagueDelete.as_view(), name='league-delete'),
+    path('update/<int:pk>', views.LeagueUpdate.as_view(), name='league-update'),
+    path('delete/<int:pk>', views.LeagueDelete.as_view(), name='league-delete'),
     path('<int:league_id>', views.detail, name='league-detail'),
-    path('<int:league_id>/battles', views.battles, name='battles'),
+    path('join/<slug:token>', views.ArmyCreate.as_view(), name='league-join'),
+    path('leave/<int:league_id>', views.leave, name='league-leave'),
+    #path('<int:league_id>/battles', views.battles, name='battles'),
 ]
