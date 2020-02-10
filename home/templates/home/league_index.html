@@ -36,21 +36,22 @@
         </div>
         <div class="col-md-8">
             <div class="card-deck">
-                {% for league in playing_list %}
+                {% for army in playing_list %}
                 <div class="card">
-                    <a href="{% url 'league-detail' league.id  %}"><img src="{{ league.image.url }}" class="card-img-top"></a>
+                    <a href="{% url 'league-detail' army.league.id  %}"><img src="{{ army.league.image.url }}" class="card-img-top"></a>
                     <div class="card-body">
-                        <h5 class="card-title">{{ league.title }}</h5>
-                        <p class="card-text">{{ league.description }}</p>
+                        <h5 class="card-title">{{ army.league.title }}</h5>
+                        <p class="card-text">{{ army.league.description }}</p>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Owned by: {{ league.owner.username }}</li>
-                        <li class="list-group-item">Current points: {{ league.current_points }}</li>
+                        <li class="list-group-item">Owned by: {{ army.league.owner.username }}</li>
+                        <li class="list-group-item">Current points: {{ army.league.current_points }}</li>
                     </ul>
                     <div class="card-body text-center">
                         <div class="btn-group" role="group">
-                            <a href="{% url 'league-detail' league.id %}" class="btn btn-primary">View</a>
-                            <a href="{% url 'league-leave' league.id %}" class="btn btn-danger">Leave</a>
+                            <a href="{% url 'league-detail' army.league.id %}" class="btn btn-primary">View</a>
+                            <a href="{% url 'army-update' army.id %}" class="btn btn-warning">Edit Army</a>
+                            <a href="{% url 'league-leave' army.league.id %}" class="btn btn-danger">Leave</a>
                         </div>
                     </div>
                 </div>
@@ -86,7 +87,7 @@
     $(document).ready(function() {
         $('#join-league-btn').click(function(e) {
            e.preventDefault();
-           let token = $('#token-text').val()
+           let token = $('#token-text').val();
            if (token !== "") {
                window.location.replace("/join/" + token)
            }

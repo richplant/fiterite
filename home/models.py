@@ -15,6 +15,11 @@ class League(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     current_points = models.PositiveIntegerField(blank=False, null=False, default=500)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['password'], name="unique_pass")
+        ]
+
     def __str__(self):
         return self.title
 

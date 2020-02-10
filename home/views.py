@@ -35,7 +35,7 @@ def log_out(request):
 @login_required
 def index(request):
     owned_list = League.objects.filter(owner=request.user).order_by('id')
-    playing_list = League.objects.filter(Q(army__user=request.user) & Q(army__active=True))
+    playing_list = Army.objects.filter(Q(user=request.user) & Q(active=True))
     context = {'owned_list': owned_list, 'playing_list': playing_list}
     return render(request, 'home/league_index.html', context)
 
@@ -147,6 +147,22 @@ class ArmyCreate(CreateView):
         form.instance.league = self.league
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class ArmyUpdate(UpdateView):
+    model = Army
+    template_name = 'home/army_update.html'
+    fields = ['title',
+              'allegiance',
+              'image']
+
+    def get_object(self, queryset=None):
+        """ Add hook to check league ownership before updating """
+        obj = super().get_object(queryset)
+        if not obj.user == self.request.user:
+            raise PermissionDenied
+        return obj
 
 
 @login_required

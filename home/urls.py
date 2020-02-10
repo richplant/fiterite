@@ -11,6 +11,7 @@ urlpatterns = [
     path('delete/<int:pk>', views.LeagueDelete.as_view(), name='league-delete'),
     path('<int:league_id>', views.detail, name='league-detail'),
     path('join/<slug:token>', views.ArmyCreate.as_view(), name='league-join'),
+    path('army/update/<int:pk>', views.ArmyUpdate.as_view(), name='army-update'),
     path('leave/<int:league_id>', views.leave, name='league-leave'),
     #path('<int:league_id>/battles', views.battles, name='battles'),
 ]
