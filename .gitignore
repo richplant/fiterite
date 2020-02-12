@@ -115,3 +115,6 @@ GitHub.sublime-settings
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
+/fiterite/settings/production.py
+/fiterite/settings/dev.py
+/fiterite/settings/heroku.py
