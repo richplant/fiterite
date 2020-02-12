@@ -1,6 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist, ValidationError
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
@@ -115,7 +116,11 @@ class ArmyCreate(CreateView):
               'image']
 
     def dispatch(self, request, *args, **kwargs):
-        self.league = get_object_or_404(League, password=self.kwargs['token'])
+        try:
+            self.league = League.objects.get(password=self.kwargs['token'])
+        except (ValidationError, ObjectDoesNotExist):
+            messages.error(request, "No league found for that token.", extra_tags='join-league')
+            return redirect('league-index')
         try:
             existing_army = Army.objects.get(Q(league=self.league) & Q(user=self.request.user))
             existing_army.active = True

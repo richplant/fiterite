@@ -4,6 +4,17 @@
         <div class="col-md-4 text-center">
             <h2 class="mb-4">Owned Leagues</h2>
             <a href="{% url 'league-create' %}"><button type="button" class="btn btn-primary">Create New League</button></a>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        {% if 'create-league' in message.tags %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                                {{ message }}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
         <div class="col-md-8">
             <div class="card-deck">
@@ -33,6 +44,17 @@
         <div class="col-md-4 text-center">
             <h2 class="mb-4">Playing in Leagues</h2>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#joinLeagueModal">Join a League</button>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    {% if 'join-league' in message.tags %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                            {{ message }}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
         </div>
         <div class="col-md-8">
             <div class="card-deck">
