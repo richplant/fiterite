@@ -2,38 +2,12 @@
 {% load render_table from django_tables2 %}
 {% block content %}
 <div class="container">
-    {% if league %}
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <img src="{{ league.image.url }}" class="img-thumbnail mb-2">
-            <div class="text-center">
-                <a href="{% url 'battle-create' league.id %}" class="btn btn-primary">Add Battle</a>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <h1 class="display-2">{{ league.title }}</h1>
-            <h3>Owned by: {{ league.owner.username }}</h3>
-            <p class="lead">{{ league.description }}</p>
-            <p> Join token: {{ league.password }}</p>
-        </div>
-    </div>
-    {% endif %}
-    {% if standing_table %}
-        <div class="row mb-4">
-            <div class="col mx-auto">
-                <h2>Player Standings</h2>
-                {% render_table standing_table %}
-            </div>
-        </div>
-    {% endif %}
-    {% if battle_table %}
-        <div class="row mb-4">
-            <div class="col mx-auto">
-                <h2>Latest Battles &nbsp;<span class="small"><a href="{% url 'battle-index' league.id %}">see all</a></span></h2>
-                {% render_table battle_table %}
-            </div>
-        </div>
-    {% endif %}
+     <div class="row mb-4">
+         <div class="col mx-auto">
+             <h1>Battles</h1>
+            {% render_table battle_table %}
+         </div>
+     </div>
 </div>
 
 <div class="modal fade" id="deleteBattleModal" tabindex="-1" role="dialog" aria-labelledby="deleteBattleModal" aria-hidden="true">
@@ -67,4 +41,5 @@
         });
     });
 </script>
+
 {% endblock content %}

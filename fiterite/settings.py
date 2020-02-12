@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'django_tables2',
     'sitegate',
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [

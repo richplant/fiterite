@@ -88,17 +88,19 @@ class Battle(models.Model):
         related_name="your_army",
         on_delete=models.SET_NULL,
         blank=False,
-        null=True
+        null=True,
+        verbose_name='Your Army'
     )
     army2 = models.ForeignKey(
         Army,
         related_name="other_player_army",
         on_delete=models.SET_NULL,
         blank=False,
-        null=True
+        null=True,
+        verbose_name='Enemy Army'
     )
-    army1_pts = models.PositiveIntegerField(blank=False, null=False, verbose_name="Points")
-    army2_pts = models.PositiveIntegerField(blank=False, null=False, verbose_name="Points")
+    army1_pts = models.PositiveIntegerField(blank=False, null=False, verbose_name="Your Points")
+    army2_pts = models.PositiveIntegerField(blank=False, null=False, verbose_name="Enemy Points")
 
     def __str__(self):
         return "{} vs {}".format(self.army1.title, self.army2.title)
@@ -108,3 +110,6 @@ class Battle(models.Model):
             return False
         else:
             return self.army1 if self.army1_pts > self.army2_pts else self.army2
+
+    def get_absolute_url(self):
+        return reverse('league-detail', args=[str(self.league.id)])

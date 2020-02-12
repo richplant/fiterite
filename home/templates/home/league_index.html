@@ -21,7 +21,7 @@
                     <div class="card-body text-center">
                         <div class="btn-group" role="group">
                             <a href="{% url 'league-update' league.id %}" class="btn btn-primary">Edit</a>
-                            <a href="{% url 'league-delete' league.id %}" class="btn btn-danger">Delete</a>
+                            <button type="button" data-league-id="{{ league.id }}" data-toggle="modal" data-target="#deleteLeagueModal" class="btn btn-danger">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -83,14 +83,41 @@
     </div>
 </div>
 
+<div class="modal fade" id="deleteLeagueModal" tabindex="-1" role="dialog" aria-labelledby="deleteLeagueModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete League</h5>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this league?</p>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="delete-league-btn" type="button" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
+        let league_id = "";
         $('#join-league-btn').click(function(e) {
            e.preventDefault();
            let token = $('#token-text').val();
            if (token !== "") {
                window.location.replace("/join/" + token)
            }
+        });
+        $('#deleteLeagueModal').on('show.bs.modal', function (e) {
+            league_id = $(e.relatedTarget).data('league-id');
+        });
+        $('#delete-league-btn').click(function(e) {
+            e.preventDefault();
+            if (league_id != "") {
+                window.location.replace("/delete/" + league_id);
+            }
         });
     });
 </script>

@@ -6,7 +6,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
+from django_tables2 import SingleTableView
 from sitegate.signin_flows.modern import ModernSignin
 from sitegate.signup_flows.classic import ClassicWithEmailSignup
 
@@ -72,18 +73,13 @@ class LeagueUpdate(UpdateView):
         return obj
 
 
-@method_decorator(login_required, name='dispatch')
-class LeagueDelete(DeleteView):
-    model = League
-    success_url = reverse_lazy('league-index')
-    template_name = 'home/league_delete.html'
-
-    def get_object(self, queryset=None):
-        """ Add hook to check league ownership before deleting """
-        obj = super().get_object(queryset)
-        if not obj.owner == self.request.user:
-            raise PermissionDenied
-        return obj
+@login_required
+def delete(request, league_id):
+    league = get_object_or_404(League, id=league_id)
+    if not league.owner == request.user:
+        raise PermissionDenied
+    league.delete()
+    return redirect('league-index')
 
 
 @login_required
@@ -100,23 +96,12 @@ def detail(request, league_id):
                 'points': army.get_points_for(),
             })
         standing_table = StandingTable(standings)
-        standing_table.order_by = '-points'
-        battle_table = BattleTable(Battle.objects.filter(league_id=league_id)[:10])
+        last_battles = Battle.objects.filter(league_id=league_id).order_by('-date')[:10]
+        battle_table = BattleTable(list(last_battles))
         context = {'league': league,
                    'battle_table': battle_table,
                    'standing_table': standing_table}
         return render(request, 'home/league_detail.html', context)
-    else:
-        raise PermissionDenied
-
-
-@login_required
-def battles(request, league_id):
-    league = get_object_or_404(League, pk=league_id)
-    players = set([army.user.id for army in Army.objects.filter(league_id=league_id)])
-    if league.owner == request.user or request.user.id in players:
-        num_battles = Battle.objects.filter(league_id=league_id).count()
-        return HttpResponse("League {} contains {} battles".format(league.title, num_battles))
     else:
         raise PermissionDenied
 
@@ -176,3 +161,75 @@ def leave(request, league_id):
         pass
     return redirect('league-index')
 
+
+@login_required
+def battles(request, league_id):
+    league = get_object_or_404(League, pk=league_id)
+    players = set([army.user.id for army in Army.objects.filter(league=league) if army.active])
+    if not league.owner == request.user and not request.user.id in players:
+        raise PermissionDenied
+    battle_table = BattleTable(Battle.objects.filter(league=league).order_by('-date'))
+    context = {
+        'battle_table': battle_table
+    }
+    return render(request, 'home/battles.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+class BattleCreate(CreateView):
+    model = Battle
+    template_name = 'home/battle_create.html'
+    fields = ['date',
+              'army1_pts',
+              'army2',
+              'army2_pts']
+
+    def dispatch(self, request, *args, **kwargs):
+        self.league = get_object_or_404(League, id=self.kwargs['league_id'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form(self, form_class=None):
+        form = super(BattleCreate, self).get_form(form_class)
+        form.fields['army2'].queryset = Army.objects.filter(Q(league=self.league) & ~Q(user=self.request.user))
+        return form
+
+    def get_context_data(self, **kwargs):
+        kwargs['league'] = self.league
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        form.instance.army1 = Army.objects.get(Q(league=self.league) & Q(user=self.request.user))
+        form.instance.league = self.league
+        return super().form_valid(form)
+
+
+@login_required
+def battle_delete(request, battle_id):
+    battle = get_object_or_404(Battle, id=battle_id)
+    league = League.objects.get(id=battle.league.id)
+    if not battle.army1.user == request.user \
+            and not battle.army2.user == request.user \
+            and not league.owner == request.user:
+        raise PermissionDenied
+    battle.delete()
+    return redirect('battle-index', league.id)
+
+
+@method_decorator(login_required, name='dispatch')
+class BattleUpdate(UpdateView):
+    model = Battle
+    template_name = 'home/battle_update.html'
+    fields = ['date',
+              'army1_pts',
+              'army2',
+              'army2_pts']
+
+    def dispatch(self, request, *args, **kwargs):
+        battle = get_object_or_404(Battle, id=self.kwargs['pk'])
+        self.league = get_object_or_404(League, id=battle.league.id)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form(self, form_class=None):
+        form = super(BattleUpdate, self).get_form(form_class)
+        form.fields['army2'].queryset = Army.objects.filter(Q(league=self.league) & ~Q(user=self.request.user))
+        return form
