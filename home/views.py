@@ -233,3 +233,7 @@ class BattleUpdate(UpdateView):
         form = super(BattleUpdate, self).get_form(form_class)
         form.fields['army2'].queryset = Army.objects.filter(Q(league=self.league) & ~Q(user=self.request.user))
         return form
+
+
+def faq(request):
+    return render(request, 'home/faq.html')

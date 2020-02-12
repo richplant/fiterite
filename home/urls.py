@@ -17,4 +17,5 @@ urlpatterns = [
     path('<int:league_id>/battles', views.battles, name='battle-index'),
     path('battles/delete/<int:battle_id>', views.battle_delete, name='battle-delete'),
     path('battles/update/<int:pk>', views.BattleUpdate.as_view(), name='battle-update'),
+    path('faq', views.faq, name='faq'),
 ]

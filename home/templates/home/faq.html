@@ -1,0 +1,27 @@
+{% extends 'home/base.html' %}
+{% load bootstrap4 %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <h2>What is this?</h2>
+            <p>It's a way to keep track of your Age of Sigmar leagues online.</p>
+            <h2>How do I create a league?</h2>
+            <p>Just click the big blue button on the league page under 'Owned Leagues' that says 'Create New League'. That will take you to a page where you can create your new league.</p>
+            <h2>Okay, I've created a league, why are there no players in it?</h2>
+            <p>Sometimes, you might want to just host a league, rather than taking part. So when you create a league, you won't be automatically added to it, you'll have to join as a player.</p>
+            <h2>How do I join as a player?</h2>
+            <p>First, you'll need the joining token for the league you want to get into. If you're joining the one you just made, you can find it by viewing the league under your Owned Leagues, otherwise you'll need to ask the league owner or a player.</p>
+            <p>Then, hit the 'Join a League' button on the index page under the 'Playing in Leagues' heading. Enter your token, and you'll be taken to a page where you can set up your army details and join the league.</p>
+            <h2>Can I have more than one army in a league?</h2>
+            <p>Not right now, sorry. If that's something you want, add it to our <a href="https://github.com/RyanGoslingsBugle/fiterite/issues">issue tracker</a>.</p>
+            <h2>I've played a game in my league, how can I record the result?</h2>
+            <p>When viewing your league, hit the 'Add Battle' button under the header. You'll be taken to a page to record the date, the army you played against and the points scored by each of you.</p>
+            <h2>A player withdrew from my league, but I can still see their battles, what's up?</h2>
+            <p>When a player leaves a league, we could either remove all reference to them, including all the battles they fought in, or we can leave them up, preserving the point totals of their opponents. Currently, we're doing the latter, but get in touch via github if you think there's a better way.</p>
+            <h2>I lost my games and am bottom of my league, why must you do me like this?</h2>
+            <p>That's wargame life, players gonna play play play. Shake it off.</p>
+        </div>
+    </div>
+</div>
+{% endblock content %}

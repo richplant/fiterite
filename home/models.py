@@ -99,8 +99,8 @@ class Battle(models.Model):
         null=True,
         verbose_name='Enemy Army'
     )
-    army1_pts = models.PositiveIntegerField(blank=False, null=False, verbose_name="Your Points")
-    army2_pts = models.PositiveIntegerField(blank=False, null=False, verbose_name="Enemy Points")
+    army1_pts = models.PositiveIntegerField(blank=False, null=False, verbose_name="Your Points Earned")
+    army2_pts = models.PositiveIntegerField(blank=False, null=False, verbose_name="Enemy Points Earned")
 
     def __str__(self):
         return "{} vs {}".format(self.army1.title, self.army2.title)
