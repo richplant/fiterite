@@ -113,11 +113,3 @@ MEDIA_URL = '/media/'
 
 LOGIN_URL = '/login'
 LOGOUT_REDIRECT_URL = 'login'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
