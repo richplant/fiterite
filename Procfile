@@ -1,0 +1,1 @@
+web: gunicorn fiterite.wsgi --log-file -
